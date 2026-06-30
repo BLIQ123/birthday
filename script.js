@@ -67,45 +67,53 @@ function startCountdown(targetDate) {
   setInterval(updateTimer, 1000);
 };
 
-// Построить маршрут (исправленный)
+// Построить маршрут
 function buildRoute() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      function(position) {
-        const userLat = position.coords.latitude.toFixed(6);
-        const userLon = position.coords.longitude.toFixed(6);
-        const destLat = 61.286526;
-        const destLon = 73.372362;
+    const destLat = 61.286526;
+    const destLon = 73.372362;
+    const fallbackUrl = `https://yandex.ru/maps/?ll=${destLon},${destLat}&z=17`;
 
-        // Более надёжный способ — открыть Яндекс Карты с маршрутом
-        const url = `https://yandex.ru/maps/?rtext=${userLat},${userLon}~${destLat},${destLon}&rtt=auto&mode=route`;
-        window.open(url, '_blank');
-      },
-      function(error) {
-        let message = "Не удалось определить ваше местоположение.";
-        if (error.code === 1) message += "\nВы отказали в доступе к геолокации.";
-        else if (error.code === 2) message += "\nМестоположение недоступно.";
-        alert(message + "\nПожалуйста, разрешите доступ к геолокации.");
-      }
-    );
-  } else {
-    alert("Ваш браузер не поддерживает определение местоположения.");
-  }
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const userLat = position.coords.latitude.toFixed(6);
+                const userLon = position.coords.longitude.toFixed(6);
+                const url = `https://yandex.ru/maps/?rtext=${userLat},${userLon}~${destLat},${destLon}&rtt=auto&mode=route`;
+                window.open(url, '_blank');
+            },
+            function() {
+                window.open(fallbackUrl, '_blank');
+            }
+        );
+    } else {
+        window.open(fallbackUrl, '_blank');
+    }
 }
 
-// Поделиться (оставил на всякий случай)
-window.shareInvitation = function() {
-  if (navigator.share) {
-    navigator.share({
-      title: 'Приглашение на MAXIM 50',
-      text: 'Присоединяйся ко мне на юбилей!',
-      url: window.location.href
+// Инициализация карты API 2.1
+function initYandexMap() {
+    if (typeof ymaps === 'undefined') {
+        console.error("Яндекс Карты API не загрузился. Проверьте API-ключ.");
+        return;
+    }
+
+    ymaps.ready(() => {
+        const map = new ymaps.Map("map", {
+            center: [61.286526, 73.372362],
+            zoom: 17,
+            controls: ["zoomControl", "fullscreenControl", "rulerControl"]
+        });
+
+        const placemark = new ymaps.Placemark([61.286526, 73.372362], {
+            hintContent: "Berlin Hall",
+            balloonContent: "<strong>Berlin Hall</strong><br>ул. Крылова, 57/1"
+        }, {
+            preset: "islands#redIcon"
+        });
+
+        map.geoObjects.add(placemark);
     });
-  } else {
-    const text = 'Приглашение на MAXIM 50\n' + window.location.href;
-    navigator.clipboard.writeText(text).then(() => alert('Ссылка скопирована!'));
-  }
-};
+}
 
 // Запуск
 window.addEventListener("load", () => {
@@ -115,6 +123,8 @@ window.addEventListener("load", () => {
 
   window.addEventListener("scroll", updateActiveSlide);
   updateActiveSlide();
+
+  initYandexMap(); // Запуск карты
 });
 
 window.addEventListener("resize", updateActiveSlide);
