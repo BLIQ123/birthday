@@ -1,59 +1,88 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MAXIM 50</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAXIM 50</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="slides">
 
-<!-- ПЕРВЫЙ СЛАЙД -->
-<section class="slide active">
-<img class="hero-image" src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotAJ7jW_v2QeHr67JQpmIsJ7XdVFkUl7PBmzPDUT2ESbU" alt="Hero image">
-</section>
+    <!-- Слайд 1 -->
+    <section class="slide active">
+        <img class="hero-image" src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotAJ7jW_v2QeHr67JQpmIsJ7XdVFkUl7PBmzPDUT2ESbU" alt="Hero">
+    </section>
 
-<!-- ВТОРОЙ СЛАЙД -->
-<section class="slide">
-<h2>50 — это не возраст.</h2>
-</section>
+    <!-- Слайд 2 -->
+    <section class="slide">
+        <h2>50 — это не возраст.</h2>
+    </section>
 
-<!-- ТРЕТИЙ СЛАЙД -->
-<section class="slide">
-<h2>Это статус.</h2>
-</section>
+    <!-- Слайд 3 -->
+    <section class="slide">
+        <h2>Это статус.</h2>
+    </section>
 
-<!-- ЧЕТВЁРТЫЙ СЛАЙД (ТАЙМЕР) -->
-<section class="slide">
-<h2>Обратный отсчёт</h2>
-<p class="event-info">Закрытый вечер. Только свои</p>
+    <!-- Слайд 4 — Таймер -->
+    <section class="slide">
+        <h2>Обратный отсчёт</h2>
+        <p class="event-info">Закрытый вечер • Только свои</p>
+        <div class="timer" id="countdown">
+            <div><span id="days">00</span><small>дней</small></div>
+            <div><span id="hours">00</span><small>часов</small></div>
+            <div><span id="minutes">00</span><small>минут</small></div>
+            <div><span id="seconds">00</span><small>секунд</small></div>
+        </div>
+    </section>
 
-<div class="timer-wrap">
-<script src="//megatimer.ru/get/39d82a1e96646dd2daa4595568a3c6a7.js"></script>
+    <!-- Слайд 5 — RSVP -->
+    <section class="slide">
+        <h2>Приглашение</h2>
+        <div class="rsvp-form">
+            <iframe 
+                src="https://forms.yandex.ru/cloud/6a42920a902902002d39aee0?iframe=1" 
+                frameborder="0" 
+                width="650" 
+                height="680" 
+                name="ya-form">
+            </iframe>
+        </div>
+    </section>
+
+    <!-- Финальный слайд -->
+    <section class="slide final-slide">
+        <h2>1 мая 2027</h2>
+        <p class="event-info" style="font-size: 32px; margin: 25px 0 30px;">
+            16:00
+        </p>
+        <p class="final-text">Berlin Hall<br>ул. Крылова, 57/1</p>
+        
+        <div class="map-container">
+            <iframe 
+                src="https://yandex.ru/map-widget/v1/?ll=73.372362%2C61.286526&z=17&pt=73.372362,61.286526~Berlin%20Hall" 
+                width="100%" 
+                height="360" 
+                frameborder="0" 
+                allowfullscreen="true" 
+                style="border-radius: 16px;">
+            </iframe>
+        </div>
+
+        <button onclick="buildRoute()" class="share-btn">Построить маршрут</button>
+    </section>
+
 </div>
-</section>
 
-<!-- RSVP (ЯНДЕКС ФОРМА) -->
-<section class="slide">
-<h2>Приглашение</h2>
+<!-- Частицы -->
+<canvas class="particles" id="particles"></canvas>
 
-<div class="rsvp-form">
-  <script src="https://forms.yandex.ru/_static/embed.js"></script>
-
-  <iframe
-    src="https://forms.yandex.ru/cloud/6a42920a902902002d39aee0?iframe=1"
-    frameborder="0"
-    name="ya-form-6a42920a902902002d39aee0"
-    width="650"
-    height="800">
-  </iframe>
+<!-- Прогресс и точки -->
+<div class="progress-container">
+    <div class="progress-bar" id="progress"></div>
 </div>
-
-</section>
-
-</div>
+<div class="slide-dots" id="dots"></div>
 
 <script src="script.js"></script>
 </body>
