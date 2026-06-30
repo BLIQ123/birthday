@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MAXIM 50</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Yandex Maps API -->
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=2816ab38-1fb4-4cee-b00d-45fbac679aa0&lang=ru_RU" type="text/javascript"></script>
 </head>
 <body>
 
@@ -38,41 +41,38 @@
     </section>
 
     <!-- Слайд 5 — RSVP -->
-<section class="slide" style="position: relative; z-index: 50;">
-    <h2>Приглашение</h2>
-    <div class="rsvp-form">
-        <script src="https://forms.yandex.ru/_static/embed.js"></script>
-        <iframe 
-            src="https://forms.yandex.ru/cloud/6a42920a902902002d39aee0?iframe=1" 
-            frameborder="0" 
-            name="ya-form-6a42920a902902002d39aee0" 
-            width="650" 
-            height="720"
-            style="pointer-events: auto;">
-        </iframe>
-    </div>
-</section>
-
-    <!-- Финальный слайд -->
-    <section class="slide final-slide">
-        <h2>1 мая 2027</h2>
-        <p class="event-info" style="font-size: 32px; margin: 25px 0 30px;">
-            16:00
-        </p>
-        <p class="final-text">Berlin Hall<br>ул. Крылова, 57/1</p>
-        
-        <div class="map-container">
+    <section class="slide" style="position: relative; z-index: 50;">
+        <h2>Приглашение</h2>
+        <div class="rsvp-form">
             <iframe 
-                src="https://yandex.ru/map-widget/v1/?ll=73.372362%2C61.286526&z=17&pt=73.372362,61.286526~Berlin%20Hall" 
-                width="100%" 
-                height="360" 
+                src="https://forms.yandex.ru/cloud/6a42920a902902002d39aee0?iframe=1" 
                 frameborder="0" 
-                allowfullscreen="true" 
-                style="border-radius: 16px;">
+                name="ya-form-6a42920a902902002d39aee0" 
+                width="650" 
+                height="720"
+                style="pointer-events: auto;">
             </iframe>
         </div>
+    </section>
 
-        <button onclick="buildRoute()" class="share-btn">Построить маршрут</button>
+       <!-- Финальный слайд -->
+    <section class="slide final-slide">
+        <div class="final-content">
+            <div class="event-date">
+                <h2>1 мая 2027</h2>
+                <div class="time">16:00</div>
+            </div>
+            
+            <div class="location">
+                <p class="venue">Berlin Hall</p>
+                <p class="address">ул. Крылова, 57/1, Сургут</p>
+            </div>
+
+            <div class="map-section">
+                <div class="map-title">Место проведения</div>
+                <div id="yandex-map" class="map-container"></div>
+            </div>
+        </div>
     </section>
 
 </div>
@@ -87,5 +87,43 @@
 <div class="slide-dots" id="dots"></div>
 
 <script src="script.js"></script>
-</body>
-</html>
+
+<!-- Инициализация Yandex Maps API -->
+<script>
+    ymaps.ready(function() {
+        try {
+            const map = new ymaps.Map("yandex-map", {
+                center: [61.286526, 73.372362],
+                zoom: 17,
+                controls: ['zoomControl', 'fullscreenControl', 'rulerControl']
+            }, {
+                suppressMapOpenBlock: true,
+                restrictMapBounds: false
+            });
+
+            const placemark = new ymaps.Placemark([61.286526, 73.372362], {
+                hintContent: 'Berlin Hall',
+                balloonContentHeader: '<strong>Berlin Hall</strong>',
+                balloonContentBody: 'ул. Крылова, 57/1<br>Сургут<br><strong>1 мая 2027 • 16:00</strong>'
+            }, {
+                preset: 'islands#goldPartyIcon',
+                iconColor: '#f2c94c'
+            });
+
+            map.geoObjects.add(placemark);
+
+            // Автоматическое открытие балуна
+            setTimeout(() => {
+                placemark.balloon.open();
+            }, 800);
+
+        } catch (e) {
+            console.error("Ошибка загрузки карты:", e);
+            document.getElementById("yandex-map").innerHTML = `
+                <div style="height:100%; display:flex; align-items:center; justify-content:center; color:#f2c94c; background:#111; border-radius:22px;">
+                    <p>Не удалось загрузить карту.<br>Проверьте API-ключ.</p>
+                </div>
+            `;
+        }
+    });
+</script>
